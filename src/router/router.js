@@ -67,6 +67,45 @@ const routes = [
     history: createWebHashHistory(),
     routes, 
   })
+
+//   //guard global sync
+//   router.beforeEach( ( to, from, next ) => {
+//       console.log({ to, from, next })
+
+//       const random = Math.random() * 100
+
+//       if ( random > 50 ) {
+//           console.log(random, 'Auth')
+//           next()
+//       } else {
+//           console.log(random, 'Block')
+//           next({ name: 'pokemon' })
+//       }
+//   })
+
+const canAccess = () => {
+    return new Promise((resolve, reject) => {
+        const random = Math.random() * 100
+
+        if ( random > 50 ) {
+            console.log(random, 'Auth')
+            resolve(true)
+        } else {
+            console.log(random, 'Block')
+            resolve(false)
+        }
+    })
+}
+
+router.beforeEach( async( to, from, next) => {
+    const auth = await canAccess()
+
+    auth
+    ? next()
+    : next({ name: 'pokemon' })
+
+
+})
   
 
   export default router
